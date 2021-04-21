@@ -23,6 +23,7 @@ require (
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/nlpodyssey/spago v0.5.2
 	github.com/rs/zerolog v1.21.0
+	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20210417010653-0739314eea07 // indirect
