@@ -120,6 +120,7 @@ github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh
 github.com/mmcloughlin/avo v0.0.0-20201105074841-5d2f697d268f/go.mod h1:6aKT4zZIrpGqB3RpFU14ByCSSyKY6LfJz4J/JJChHfI=
 github.com/nlpodyssey/gopickle v0.1.0 h1:9wjwRqXsOSYWZl4c4ko472b6RW+VB1I441ZcfFg1r5g=
 github.com/nlpodyssey/gopickle v0.1.0/go.mod h1:YIUwjJ2O7+vnBsxUN+MHAAI3N+adqEGiw+nDpwW95bY=
+github.com/nlpodyssey/gotokenizers v0.2.0 h1:CWx/sp9s35XMO5lT1kNXCshFGDCfPuuWdx/9JiQBsVc=
 github.com/nlpodyssey/gotokenizers v0.2.0/go.mod h1:SBLbuSQhpni9M7U+Ie6O46TXYN73T2Cuw/4eeYHYJ+s=
 github.com/nlpodyssey/spago v0.5.2 h1:n38AMTLVCXK2n2g/HdO0Ifo/lwUxEFbhMgNo1jOVUDw=
 github.com/nlpodyssey/spago v0.5.2/go.mod h1:Sza+aMcVx7DFssNRW3BVzu3qJzylWmvqQyOXRSxvAqI=
