@@ -20,15 +20,19 @@ require (
 	github.com/DataDog/zstd v1.4.8 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/snappy v0.0.3 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
+	github.com/kr/pretty v0.2.1 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/nlpodyssey/spago v0.5.2
 	github.com/rs/zerolog v1.21.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20210417010653-0739314eea07 // indirect
-	golang.org/x/net v0.0.0-20210420210106-798c2154c571 // indirect
-	golang.org/x/sys v0.0.0-20210420205809-ac73e9fd8988 // indirect
-	google.golang.org/genproto v0.0.0-20210421164718-3947dc264843 // indirect
-	google.golang.org/grpc v1.37.0 // indirect
+	golang.org/x/net v0.0.0-20210421230115-4e50805a0758 // indirect
+	golang.org/x/sys v0.0.0-20210421221651-33663a62ff08 // indirect
+	google.golang.org/genproto v0.0.0-20210422153429-2279cbceda62
+	google.golang.org/grpc v1.37.0
+	google.golang.org/protobuf v1.26.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
