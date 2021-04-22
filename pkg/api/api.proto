@@ -1,0 +1,50 @@
+syntax = "proto3";
+option go_package = "github.com/SpecializedGeneralist/translator/pkg/api";
+
+package api;
+
+import "google/api/annotations.proto";
+
+import "google/protobuf/descriptor.proto";
+
+import "google/protobuf/empty.proto";
+
+message ResponseErrors {
+  repeated ResponseError value = 1;
+}
+
+message ResponseError {
+  string message = 1;
+}
+
+message TranslateTextInput {
+  string source_language = 1;
+
+  string target_language = 2;
+
+  string text = 3;
+}
+
+message TranslateTextResponse {
+  TranslateTextData data = 1;
+
+  ResponseErrors errors = 2;
+}
+
+message TranslateTextData {
+  float took = 1;
+
+  string translated_text = 2;
+}
+
+//TranslateTextParameters holds parameters to TranslateText
+message TranslateTextRequest {
+  TranslateTextInput translate_text_input = 1;
+}
+
+service Api {
+  rpc TranslateText ( TranslateTextRequest ) returns ( TranslateTextResponse ) {
+    option (google.api.http) = { post:"/translate_text" body:"translate_text_input"  };
+  }
+}
+
