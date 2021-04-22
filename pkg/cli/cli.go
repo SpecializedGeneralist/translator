@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"github.com/SpecializedGeneralist/translator/pkg/configuration"
 	"github.com/SpecializedGeneralist/translator/pkg/models"
+	"github.com/SpecializedGeneralist/translator/pkg/server"
 	"github.com/rs/zerolog"
 	"github.com/urfave/cli/v2"
 	"os"
@@ -71,9 +72,8 @@ func runAction(ctx *cli.Context) (err error) {
 		return err
 	}
 
-	// TODO: run server ...
-
-	return nil
+	srv := server.New(config, manager, logger)
+	return srv.Run()
 }
 
 func newLogger(level zerolog.Level) zerolog.Logger {
