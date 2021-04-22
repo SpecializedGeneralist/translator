@@ -36,7 +36,7 @@ func NewManager(config *configuration.Config, logger zerolog.Logger) *Manager {
 	}
 }
 
-// modelsMap maps [from][to] => *Model
+// modelsMap maps [source][target] => *Model
 type modelsMap map[string]map[string]*Model
 
 // LoadModels loads all models according to the configuration.
@@ -59,15 +59,15 @@ func (mng *Manager) LoadModels() error {
 	return nil
 }
 
-// GetModel returns a Model for translating from/to the language of
-// given identifiers, and reports whether a model for that pair or
-// languages is loaded.
-func (mng *Manager) GetModel(from, to string) (*Model, bool) {
-	fromMap, fromOk := mng.models[from]
-	if !fromOk {
+// GetModel returns a Model for translating texts from the given source
+// language to the given target language. It also reports whether a model for
+// that pair or languages is present (previously loaded).
+func (mng *Manager) GetModel(source, target string) (*Model, bool) {
+	sourceMap, sourceOk := mng.models[source]
+	if !sourceOk {
 		return nil, false
 	}
-	model, modelOk := fromMap[to]
+	model, modelOk := sourceMap[target]
 	if !modelOk {
 		return nil, false
 	}
@@ -76,10 +76,10 @@ func (mng *Manager) GetModel(from, to string) (*Model, bool) {
 
 // Translate is a convenience method to get a model and perform translation
 // in a single step.
-func (mng *Manager) Translate(from, to, text string) (string, error) {
-	model, modelFound := mng.GetModel(from, to)
+func (mng *Manager) Translate(source, target, text string) (string, error) {
+	model, modelFound := mng.GetModel(source, target)
 	if !modelFound {
-		return "", fmt.Errorf("no model available for translation from %#v to %#v", from, to)
+		return "", fmt.Errorf("no model available for translation from %#v to %#v", source, target)
 	}
 
 	translatedText := model.Translate(text)
@@ -87,15 +87,15 @@ func (mng *Manager) Translate(from, to, text string) (string, error) {
 }
 
 func (mng *Manager) loadModel(ln configuration.LanguageModel) error {
-	if _, ok := mng.models[ln.From]; !ok {
-		mng.models[ln.From] = make(map[string]*Model, 1)
+	if _, ok := mng.models[ln.Source]; !ok {
+		mng.models[ln.Source] = make(map[string]*Model, 1)
 	}
-	if _, ok := mng.models[ln.From][ln.To]; ok {
-		return fmt.Errorf("a model was already loaded for translation from %#v to %#v", ln.From, ln.To)
+	if _, ok := mng.models[ln.Source][ln.Target]; ok {
+		return fmt.Errorf("a model was already loaded for translation from %#v to %#v", ln.Source, ln.Target)
 	}
 
 	model := NewModel(mng.config, ln.Model, mng.logger)
-	mng.models[ln.From][ln.To] = model
+	mng.models[ln.Source][ln.Target] = model
 
 	return model.Load()
 }

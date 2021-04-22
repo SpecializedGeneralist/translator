@@ -4,17 +4,17 @@ port: 10000
 tls_enabled: false
 tls_cert:
 tls_key:
-models_path: /tmp/translator-models
+models_path: /home/m/.spago
 language_models:
-  - from: it
-    to: en
+  - source: it
+    target: en
     model: Helsinki-NLP/opus-mt-it-en
-  - from: en
-    to: it
+  - source: en
+    target: it
     model: Helsinki-NLP/opus-mt-en-it
-  - from: de
-    to: en
+  - source: de
+    target: en
     model: Helsinki-NLP/opus-mt-de-en
-  - from: en
-    to: de
+  - source: en
+    target: de
     model: Helsinki-NLP/opus-mt-en-de

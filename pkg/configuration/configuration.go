@@ -46,10 +46,10 @@ type Config struct {
 // LanguageModel identifies a single model and the identifiers for the source
 // and target languages it supports.
 type LanguageModel struct {
-	// From is an identifier for the source language of translation.
-	From string `yaml:"from"`
-	// To is an identifier for the target language of translation.
-	To string `yaml:"to"`
+	// Source is an identifier for the source language of translation.
+	Source string `yaml:"source"`
+	// Target is an identifier for the target language of translation.
+	Target string `yaml:"target"`
 	// Model is the name of a spaGO-compatible model.
 	Model string `yaml:"model"`
 }
