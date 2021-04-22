@@ -1,0 +1,87 @@
+# Copyright 2021 SpecializedGeneralist Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+openapi: 3.0.3
+
+info:
+  title: Translator
+  version: 0.1.0
+  contact:
+    name: SpecializedGeneralist
+    url: https://github.com/SpecializedGeneralist
+    email: specializedgeneralist@protonmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+paths:
+  /translate_text:
+    post:
+      description: Translate a text
+      operationId: translateText
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslateTextInput'
+      responses:
+        default:
+          description: Translated text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslateTextResponse'
+
+components:
+  schemas:
+    ResponseErrors:
+      type: array
+      items:
+        $ref: '#/components/schemas/ResponseError'
+    ResponseError:
+      type: object
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+    TranslateTextInput:
+      type: object
+      properties:
+        source_language:
+          type: string
+          description: Language identifier of the input text
+        target_language:
+          type: string
+          description: Identifier of the translation target language
+        text:
+          type: string
+      additionalProperties: false
+    TranslateTextResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TranslateTextData'
+        errors:
+          $ref: '#/components/schemas/ResponseErrors'
+      additionalProperties: false
+    TranslateTextData:
+      type: object
+      properties:
+        took:
+          type: number
+          description: How much time the translation process took in seconds
+        translated_text:
+          type: string
+          description: Text translated into the target language
+      additionalProperties: false
