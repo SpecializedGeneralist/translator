@@ -29,7 +29,7 @@ require (
 	github.com/urfave/cli/v2 v2.3.0
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20210417010653-0739314eea07 // indirect
-	golang.org/x/net v0.0.0-20210421230115-4e50805a0758 // indirect
+	golang.org/x/net v0.0.0-20210421230115-4e50805a0758
 	golang.org/x/sys v0.0.0-20210421221651-33663a62ff08 // indirect
 	google.golang.org/genproto v0.0.0-20210422153429-2279cbceda62
 	google.golang.org/grpc v1.37.0
