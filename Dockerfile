@@ -22,9 +22,9 @@ RUN go mod download \
         -o /go/bin/translator \
         cmd/translator/main.go
 
-FROM scratch
+FROM alpine:3.13.5
 
-COPY --from=Builder /go/bin/translator /translator
+COPY --from=Builder /go/bin/translator /bin/translator
 
-ENTRYPOINT ["/translator"]
+ENTRYPOINT ["/bin/translator"]
 CMD ["help"]
