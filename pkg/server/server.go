@@ -16,10 +16,12 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"github.com/SpecializedGeneralist/translator/pkg/api"
 	"github.com/SpecializedGeneralist/translator/pkg/configuration"
 	"github.com/SpecializedGeneralist/translator/pkg/models"
 	"github.com/rs/zerolog"
+	"runtime/debug"
 	"time"
 )
 
@@ -41,7 +43,14 @@ func New(config *configuration.Config, manager *models.Manager, logger zerolog.L
 }
 
 // TranslateText translates a text.
-func (s *Server) TranslateText(_ context.Context, req *api.TranslateTextRequest) (*api.TranslateTextResponse, error) {
+func (s *Server) TranslateText(_ context.Context, req *api.TranslateTextRequest) (resp *api.TranslateTextResponse, _ error) {
+	defer func() {
+		if r := recover(); r != nil {
+			st := string(debug.Stack())
+			resp = &api.TranslateTextResponse{Errors: s.makeFatalErrors(req, fmt.Errorf("panic: %v\n%s", r, st))}
+		}
+	}()
+
 	startTime := time.Now()
 
 	in := req.GetTranslateTextInput()
@@ -56,7 +65,7 @@ func (s *Server) TranslateText(_ context.Context, req *api.TranslateTextRequest)
 	}
 
 	elapsedTime := time.Since(startTime)
-	resp := &api.TranslateTextResponse{
+	resp = &api.TranslateTextResponse{
 		Data: &api.TranslateTextData{
 			TranslatedText: translatedText,
 			Took:           float32(elapsedTime.Seconds()),

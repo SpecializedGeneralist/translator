@@ -24,3 +24,12 @@ func (s *Server) makeErrors(req interface{}, err error) *api.ResponseErrors {
 		},
 	}
 }
+
+func (s *Server) makeFatalErrors(req interface{}, err error) *api.ResponseErrors {
+	s.logger.Error().Err(err).Interface("request", req).Send()
+	return &api.ResponseErrors{
+		Value: []*api.ResponseError{
+			{Message: err.Error()},
+		},
+	}
+}
