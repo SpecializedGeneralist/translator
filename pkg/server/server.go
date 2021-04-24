@@ -21,6 +21,7 @@ import (
 	"github.com/SpecializedGeneralist/translator/pkg/configuration"
 	"github.com/SpecializedGeneralist/translator/pkg/models"
 	"github.com/rs/zerolog"
+	"runtime"
 	"runtime/debug"
 	"time"
 )
@@ -50,6 +51,10 @@ func (s *Server) TranslateText(_ context.Context, req *api.TranslateTextRequest)
 			resp = &api.TranslateTextResponse{Errors: s.makeFatalErrors(req, fmt.Errorf("panic: %v\n%s", r, st))}
 		}
 	}()
+
+	// FIXME: we force GC to prevent excessive memory consumption (probably because of Matrices pools)
+	runtime.GC()
+	defer runtime.GC()
 
 	startTime := time.Now()
 
