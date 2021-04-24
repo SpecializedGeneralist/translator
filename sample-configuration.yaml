@@ -1,10 +1,64 @@
+# Sample configuration file for SpecializedGeneralist Translator program.
+#
+# You can interpolate environment variables with the syntax "${var}" or "$var"
+# (without double quotes) - reference: Go "os.ExpandEnv" function.
+
+# Minimum severity level for log messages.
+# Possible values: "debug", "info", "warn", "error".
 log_level: info
+
+# Server binding address.
 host: 0.0.0.0
+# Server listening port.
 port: 10000
+
+# Whether to enable TLS.
 tls_enabled: false
+# TLS cert filename. It is ignored if tls_enabled is false.
 tls_cert:
+# TLS key filename. It is ignored if tls_enabled is false.
 tls_key:
-models_path: /home/m/.spago
+
+# Path where spaGO models are stored (and automatically downloaded,
+# if needed).
+models_path: $HOME/.spago
+
+# Under "language_models" you can specify a list of source/target language
+# pairs, together with the name of the spaGO-compatible model that will handle
+# each of those translations.
+#
+# Each source/target pair in this list must be unique.
+#
+# No specific code system is imposed for sources and targets: you can set them
+# to any value which is meaningful to you. They will be simply compared as they
+# are with the same parameters from clients requests. The comparison is
+# case-sensitive.
+# Common choices are ISO 639 or BCP-47 language codes.
+#
+# Each model name will be treated as a sub-path of the "models_path" setting.
+# For example, given the setting "models_path: /home/user/.spago", a language
+# model defined as "model: Foo/Bar" is expected to be located at
+# "/home/user/.spago/Foo/Bar".
+#
+# If a model is not found on disk, the model name is searched among the
+# models publicly available from Hugging Face hub (see:
+# https://huggingface.co/models). Then, if a model is found, it is automatically
+# downloaded to the same destination described above, and also converted to
+# a spaGO model.
+#
+# If any of those steps fails, the program will not take anything else for
+# granted and will fail to start.
+#
+# Before letting the program download and convert models for you, just
+# be sure to set proper writing permissions for the "models_path" folder,
+# and keep an eye on your available disk space.
+# Depending on which and how many models you plan to load, also keep an eye
+# on your available memory before loading them.
+#
+# As a matter of example, the following ready-to-use definitions will allow the
+# server to support translations from Italian to English and vice versa,
+# using two models available from Hugging Face, courtesy of the University of
+# Helsinki (see: https://huggingface.co/Helsinki-NLP).
 language_models:
   - source: it
     target: en
@@ -12,9 +66,3 @@ language_models:
   - source: en
     target: it
     model: Helsinki-NLP/opus-mt-en-it
-  - source: de
-    target: en
-    model: Helsinki-NLP/opus-mt-de-en
-  - source: en
-    target: de
-    model: Helsinki-NLP/opus-mt-en-de
