@@ -42,7 +42,7 @@ Once you are done with your configuration definition, run:
 ./translator -c your-config.yaml
 ```
 
-The program will first load the configured models from the configured models' path.
+The program will first load the configured models from the given path.
 If a model is not found, the program will automatically attempt to download it from
 Hugging Face models hub, convert it to a spaGO model, and load it as well.
 
