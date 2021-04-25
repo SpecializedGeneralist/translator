@@ -89,7 +89,7 @@ func (m *Model) Load() error {
 
 // Translate performs automatic translation of the given text.
 func (m *Model) Translate(text string) string {
-	g := ag.NewGraph(ag.IncrementalForward(false))
+	g := ag.NewGraph(ag.IncrementalForward(false), ag.ConcurrentComputations(1))
 	defer g.Clear()
 
 	proc := nn.Reify(nn.Context{Graph: g, Mode: nn.Inference}, m.model).(*conditionalgeneration.Model)
