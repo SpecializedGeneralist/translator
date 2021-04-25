@@ -12,6 +12,9 @@ host: 0.0.0.0
 # Server listening port.
 port: 10000
 
+# Maximum amount of concurrent computations allowed.
+max_concurrent_computations: 4
+
 # Whether to enable TLS.
 tls_enabled: false
 # TLS cert filename. It is ignored if tls_enabled is false.

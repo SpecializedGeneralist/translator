@@ -30,6 +30,9 @@ type Config struct {
 	Host string `yaml:"host"`
 	// Port is the server listening port.
 	Port int `yaml:"port"`
+	// MaxConcurrentComputations is the maximum amount of concurrent
+	// computations allowed.
+	MaxConcurrentComputations int `yaml:"max_concurrent_computations"`
 	// TLSEnabled reports whether to enable TLS.
 	TLSEnabled bool `yaml:"tls_enabled"`
 	// TLSCert is the TLS cert file. It is ignored if TLSEnabled is false.

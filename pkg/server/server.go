@@ -20,6 +20,7 @@ import (
 	"github.com/SpecializedGeneralist/translator/pkg/api"
 	"github.com/SpecializedGeneralist/translator/pkg/configuration"
 	"github.com/SpecializedGeneralist/translator/pkg/models"
+	"github.com/nlpodyssey/spago/pkg/utils/processingqueue"
 	"github.com/rs/zerolog"
 	"runtime"
 	"runtime/debug"
@@ -29,52 +30,58 @@ import (
 // Server is the main implementation of api.ApiServer.
 type Server struct {
 	api.UnimplementedApiServer
-	config  *configuration.Config
-	manager *models.Manager
-	logger  zerolog.Logger
+	config    *configuration.Config
+	manager   *models.Manager
+	logger    zerolog.Logger
+	procQueue processingqueue.ProcessingQueue
 }
 
 // New creates a new Server.
 func New(config *configuration.Config, manager *models.Manager, logger zerolog.Logger) *Server {
 	return &Server{
-		config:  config,
-		manager: manager,
-		logger:  logger,
+		config:    config,
+		manager:   manager,
+		logger:    logger,
+		procQueue: processingqueue.New(config.MaxConcurrentComputations),
 	}
 }
 
 // TranslateText translates a text.
 func (s *Server) TranslateText(_ context.Context, req *api.TranslateTextRequest) (resp *api.TranslateTextResponse, _ error) {
-	defer func() {
-		if r := recover(); r != nil {
-			st := string(debug.Stack())
-			resp = &api.TranslateTextResponse{Errors: s.makeFatalErrors(req, fmt.Errorf("panic: %v\n%s", r, st))}
+	s.procQueue.Run(func() {
+		defer func() {
+			if r := recover(); r != nil {
+				st := string(debug.Stack())
+				resp = &api.TranslateTextResponse{Errors: s.makeFatalErrors(req, fmt.Errorf("panic: %v\n%s", r, st))}
+			}
+		}()
+
+		// FIXME: we force GC to prevent excessive memory consumption (probably because of Matrices pools)
+		runtime.GC()
+		defer runtime.GC()
+
+		startTime := time.Now()
+
+		in := req.GetTranslateTextInput()
+		source := in.GetSourceLanguage()
+		target := in.GetTargetLanguage()
+		text := in.GetText()
+
+		translatedText, err := s.manager.Translate(source, target, text)
+
+		if err != nil {
+			resp = &api.TranslateTextResponse{Errors: s.makeErrors(req, err)}
+			return
 		}
-	}()
 
-	// FIXME: we force GC to prevent excessive memory consumption (probably because of Matrices pools)
-	runtime.GC()
-	defer runtime.GC()
+		elapsedTime := time.Since(startTime)
+		resp = &api.TranslateTextResponse{
+			Data: &api.TranslateTextData{
+				TranslatedText: translatedText,
+				Took:           float32(elapsedTime.Seconds()),
+			},
+		}
+	})
 
-	startTime := time.Now()
-
-	in := req.GetTranslateTextInput()
-	source := in.GetSourceLanguage()
-	target := in.GetTargetLanguage()
-	text := in.GetText()
-
-	translatedText, err := s.manager.Translate(source, target, text)
-
-	if err != nil {
-		return &api.TranslateTextResponse{Errors: s.makeErrors(req, err)}, nil
-	}
-
-	elapsedTime := time.Since(startTime)
-	resp = &api.TranslateTextResponse{
-		Data: &api.TranslateTextData{
-			TranslatedText: translatedText,
-			Took:           float32(elapsedTime.Seconds()),
-		},
-	}
 	return resp, nil
 }
