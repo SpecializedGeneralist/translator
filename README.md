@@ -28,7 +28,6 @@ You can get the code and build it like this:
 ```shell
 git clone https://github.com/SpecializedGeneralist/translator.git
 cd translator
-go mod download
 go build -o translator cmd/translator/main.go
 ```
 
