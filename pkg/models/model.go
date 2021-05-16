@@ -16,6 +16,9 @@ package models
 
 import (
 	"fmt"
+	"os"
+	"path"
+
 	"github.com/SpecializedGeneralist/translator/pkg/configuration"
 	"github.com/SpecializedGeneralist/translator/pkg/osutils"
 	"github.com/nlpodyssey/spago/pkg/ml/ag"
@@ -26,7 +29,6 @@ import (
 	"github.com/nlpodyssey/spago/pkg/nlp/transformers/bart/loader"
 	"github.com/nlpodyssey/spago/pkg/nlp/transformers/huggingface"
 	"github.com/rs/zerolog"
-	"path"
 )
 
 // Model provides high-level functionalities for loading spaGO models and
@@ -130,7 +132,6 @@ func (m *Model) downloadSpagoModelIfMissing() error {
 		return nil
 	}
 
-	m.logger.Info().Msgf("%#v does not exist", modelPath)
 	return m.downloadSpagoModel()
 }
 
@@ -142,8 +143,12 @@ func (m *Model) downloadSpagoModel() error {
 	if err != nil {
 		return err
 	}
+
 	if !modelsPathExists {
-		return fmt.Errorf("models path %#v does not exist", modelsPath)
+		err = os.Mkdir(modelsPath, 0755)
+		if err != nil {
+			return fmt.Errorf("can't create folder %#v %w", modelsPath, err)
+		}
 	}
 
 	downloader := huggingface.NewDownloader(modelsPath, m.name, false)
