@@ -94,7 +94,7 @@ func (m *Model) Translate(text string) string {
 	g := ag.NewGraph(ag.IncrementalForward(false), ag.ConcurrentComputations(1))
 	defer g.Clear()
 
-	proc := nn.Reify(nn.Context{Graph: g, Mode: nn.Inference}, m.model).(*conditionalgeneration.Model)
+	proc := nn.ReifyForInference(m.model, g).(*conditionalgeneration.Model)
 	bartConfig := proc.BART.Config
 
 	tokens := m.tokenizer.Tokenize(text)
